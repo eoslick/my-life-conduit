@@ -1,27 +1,50 @@
+// src/main/java/com/ses/mylifeconduit/core/tenant/TenantId.java
 package com.ses.mylifeconduit.core.tenant;
 
-import com.ses.mylifeconduit.core.ddd.domain.EntityId;
+import com.ses.mylifeconduit.core.ddd.EntityId;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Strongly-typed identifier for tenants in a multi-tenant system.
+ * Represents the strongly-typed identifier for a Tenant.
+ * Uses a {@link UUID} as the underlying value.
  */
-public class TenantId extends EntityId {
-    
+public record TenantId(UUID value) implements EntityId {
+
     /**
-     * Creates a new tenant identifier with a random UUID.
+     * Creates a new TenantId with the specified UUID value.
+     *
+     * @param value The UUID value. Cannot be null.
+     * @throws NullPointerException if value is null.
      */
-    public TenantId() {
-        super(UUID.randomUUID());
+    public TenantId {
+        Objects.requireNonNull(value, "TenantId value cannot be null");
     }
-    
+
     /**
-     * Creates a tenant identifier with a specific UUID.
-     * 
-     * @param id The UUID to use for this identifier
+     * Creates a new TenantId with a randomly generated UUID.
+     *
+     * @return A new TenantId instance.
      */
-    public TenantId(UUID id) {
-        super(id);
+    public static TenantId generate() {
+        return new TenantId(UUID.randomUUID());
+    }
+
+    /**
+     * Creates a TenantId from a string representation of a UUID.
+     *
+     * @param uuidString The string representation of the UUID.
+     * @return A TenantId instance.
+     * @throws IllegalArgumentException if the string is not a valid UUID representation.
+     */
+    public static TenantId fromString(String uuidString) {
+        Objects.requireNonNull(uuidString, "UUID string cannot be null");
+        return new TenantId(UUID.fromString(uuidString));
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
     }
 }

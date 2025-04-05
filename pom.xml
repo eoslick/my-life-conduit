@@ -12,6 +12,98 @@
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>5.10.1</junit.version>
+        <mockito.version>5.8.0</mockito.version>
+        <assertj.version>3.24.2</assertj.version>
     </properties>
 
+    <dependencies>
+        <!-- H2 Database (In-Memory) -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <!-- Use a recent, stable version -->
+            <version>2.2.224</version>
+            <!-- Scope can be runtime if only needed for running,
+                 but often kept as compile/runtime for simplicity during dev/test -->
+            <!-- <scope>runtime</scope> -->
+        </dependency>
+
+        <!-- JUnit 5 API for writing tests -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit 5 Engine to run the tests -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Mockito for mocking dependencies in tests -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version> <!-- Ensure mockito.version is defined in properties -->
+            <scope>test</scope>
+        </dependency>
+        <dependency> <!-- Often needed alongside mockito-core for JUnit 5 integration -->
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version> <!-- Use the same version -->
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Compiler Plugin: Enforces Java 23 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version> <!-- Use a recent version -->
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <compilerArgs>
+                        <!-- Enable preview features if needed, adjust as necessary -->
+                        <!-- <arg>-enable-preview</arg> -->
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
+            <!-- JAR Plugin: Configures executable JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version> <!-- Use a recent version -->
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <!-- Specify your main class here -->
+                            <mainClass>com.ses.mylifeconduit.MainApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- Surefire Plugin (You already have this, ensure it's configured for JUnit 5) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <net.bytebuddy.experimental>true</net.bytebuddy.experimental>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

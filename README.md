@@ -32,7 +32,11 @@ classDiagram
     }
     
     class AggregateId {
-        +UUID value
+        -UUID value
+        +getValue() UUID
+        +equals(Object o) boolean
+        +hashCode() int
+        +toString() String
     }
     
     %% Event Classes
